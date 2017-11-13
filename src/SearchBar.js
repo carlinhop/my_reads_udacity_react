@@ -6,15 +6,13 @@ import BookShelf from './BookShelf'
 
 class SearchBar extends Component { 
   	//add static propTypes
-  	state = {search: '', books: ''}
+  	state = {search: ''}
 
 	updateSearch = (event) =>{
       this.setState({search: event.target.value})
     }
 	
-	componentDidMount(){
-    	return getAll(this.state.search).then((results)=>(this.setState({books: results})))
-    }
+	
 
   	render(){
       return (
@@ -37,7 +35,7 @@ class SearchBar extends Component {
               <div className="search-books-results">
                 <ol className="books-grid"></ol>
               </div>
-			<BookShelf />
+			//<BookShelf />
           </div>
       )
       

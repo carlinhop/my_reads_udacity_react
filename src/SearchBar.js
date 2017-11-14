@@ -1,15 +1,28 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
-import {getAll} from './BooksAPI'
+import {search} from './BooksAPI'
 import BookShelf from './BookShelf'
 
 
 class SearchBar extends Component { 
   	//add static propTypes
-  	state = {search: ''}
+  	state = {search: '',
+             searchResults: []
+            }
 
 	updateSearch = (event) =>{
-      this.setState({search: event.target.value})
+     if (!event.target.value){
+       console.log(event.target.value)
+       this.setState({search: "", searchResults: []})
+     }
+     else{
+     	this.setState({search: event.target.value}, () => {
+		      	search(this.state.search, 10).then((results)=>{
+          	return this.setState({searchResults: results})
+        })
+      })
+     }
+      
     }
 	
 	
@@ -33,9 +46,10 @@ class SearchBar extends Component {
                 </div>
               </div>
               <div className="search-books-results">
-                <ol className="books-grid"></ol>
+                <ol className="books-grid">
+					<BookShelf books={this.state.searchResults} title="Search Results"/>
+				</ol>
               </div>
-			//<BookShelf />
           </div>
       )
       

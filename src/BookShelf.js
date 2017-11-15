@@ -5,7 +5,7 @@ import Book from './Book'
  let BookShelf = (props)=> {
 
     let books = props.books.length > 0 && props.books.map(
-      (book) => (<li><Book image={book.imageLinks.smallThumbnail} key={book.id} title={book.title} author={book.author}/></li>)
+      (book) => (<li><Book updateShelf={props.updateShelf} image={book.imageLinks.smallThumbnail} key={book.id} id={book.id} title={book.title} author={book.author} shelf={book.shelf}/></li>)
     )   
     return (
       			

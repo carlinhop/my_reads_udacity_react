@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
-import {search} from './BooksAPI'
+import {search, update} from './BooksAPI'
 import BookShelf from './BookShelf'
 
 
@@ -12,7 +12,6 @@ class SearchBar extends Component {
 
 	updateSearch = (event) =>{
      if (!event.target.value){
-       console.log(event.target.value)
        this.setState({search: "", searchResults: []})
      }
      else{
@@ -25,7 +24,9 @@ class SearchBar extends Component {
       
     }
 	
-	
+	updateShelf(book, value){
+    	return update(book, value)
+    }
 
   	render(){
       return (
@@ -47,7 +48,7 @@ class SearchBar extends Component {
               </div>
               <div className="search-books-results">
                 <ol className="books-grid">
-					<BookShelf books={this.state.searchResults} title="Search Results"/>
+					<BookShelf updateShelf={this.updateShelf} books={this.state.searchResults} title="Search Results"/>
 				</ol>
               </div>
           </div>

@@ -1,7 +1,7 @@
 import React from 'react'
-import {Route, Link} from 'react-router-dom'
+import {Route} from 'react-router-dom'
 import { BrowserRouter } from 'react-router-dom'
-import {getAll} from './BooksAPI'
+import {getAll, update} from './BooksAPI'
 import './App.css'
 import SearchBar from './SearchBar'
 import BookShelf from './BookShelf'
@@ -21,17 +21,33 @@ class BooksApp extends React.Component {
 
   }
 
-    componentDidMount(){
-      		
-      	getAll().then((results)=>{
+	constructor(props){
+    super(props)
+    this.updateAllData = this.updateAllData.bind(this)
+    this.updateShelf = this.updateShelf.bind(this)
+    }
+
+	updateAllData(){
+    	getAll().then((results)=>{
       			console.log(results)
       			this.setState({books:results})
 			})
-		
+    }	
+
+    componentDidMount(){
+      	return this.updateAllData()
     }
-	
-	
-             
+
+	updateShelf(book, value){
+    	update(book, value).then((result)=>{
+      	
+      	return getAll().then((results)=>{
+      			console.log(this)
+      			this.setState({books:results})
+			})
+    })
+    }
+         
   render() {
     return (
   	<BrowserRouter> 
@@ -39,14 +55,14 @@ class BooksApp extends React.Component {
       	<Route exact path="/" render={(props)=>{
     	return(
               <div>
-                <BookShelf books={this.state.books.filter(book => (
-    				book.shelf == "currentlyReading"				
+                <BookShelf updateShelf={this.updateShelf} books={this.state.books.filter(book => (
+    				book.shelf === "currentlyReading"				
     ))} title="Currently Reading"/>
-    			<BookShelf books={this.state.books.filter(book => (
-    				book.shelf == "wantToRead"				
+    			<BookShelf updateShelf={this.updateShelf} books={this.state.books.filter(book => (
+    				book.shelf === "wantToRead"				
     ))} title="Want to Read"/>
-    			<BookShelf books={this.state.books.filter(book => (
-    				book.shelf == "read"				
+    			<BookShelf updateShelf={this.updateShelf} books={this.state.books.filter(book => (
+    				book.shelf === "read"				
     ))} title="Read"/>
                 <SearchButton/>
               </div>

@@ -25,11 +25,11 @@ class BooksApp extends React.Component {
     super(props)
     this.updateAllData = this.updateAllData.bind(this)
     this.updateShelf = this.updateShelf.bind(this)
+    this.findBookInState = this.findBookInState.bind(this)
     }
 
 	updateAllData(){
     	getAll().then((results)=>{
-      			console.log(results)
       			this.setState({books:results})
 			})
     }	
@@ -42,10 +42,24 @@ class BooksApp extends React.Component {
     	update(book, value).then((result)=>{
       	
       	return getAll().then((results)=>{
-      			console.log(this)
       			this.setState({books:results})
 			})
-    })
+    	})
+    }
+
+	findBookInState(book){
+    	let result
+      	for(let i = 0; i < this.state.books.length; i++){
+      		if(this.state.books[i].id === book.id){
+      			result = this.state.books[i]
+      			break
+    		}
+			else{
+              	book.shelf = "none"
+            	result = book
+            }
+  		}
+		return result
     }
          
   render() {
@@ -68,7 +82,10 @@ class BooksApp extends React.Component {
               </div>
   			)}}
      	/>
-     	<Route exact path="/search" component={SearchBar}
+     	<Route exact path="/search" render={(props) => {
+          return (
+          	<SearchBar updateHomeData={this.updateAllData} findBookInState={this.findBookInState}  />
+          	)}}
 		/>
    </div>
      </BrowserRouter> 

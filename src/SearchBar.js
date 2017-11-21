@@ -9,6 +9,11 @@ class SearchBar extends Component {
   	state = {search: '',
              searchResults: []
             }
+	constructor(props){
+      super(props)
+      
+      
+    }
 
 	updateSearch = (event) =>{
      if (!event.target.value){
@@ -16,8 +21,15 @@ class SearchBar extends Component {
      }
      else{
      	this.setState({search: event.target.value}, () => {
-		      	search(this.state.search, 10).then((results)=>{
-          	return this.setState({searchResults: results})
+          search(this.state.search, 10).then((results)=>{
+          this.setState((oldState) => {
+          	let filteredResults = results.map((book)=>{
+
+            	return this.props.findBookInState(book)
+            })
+            
+          	return {searchResults: filteredResults}   
+          })
         })
       })
      }
@@ -32,7 +44,9 @@ class SearchBar extends Component {
       return (
             <div className="search-books">
               <div className="search-books-bar">
-                <Link className="close-search" to="/" />
+                <Link className="close-search" to="/" onClick={(event)=>{
+    				this.props.updateHomeData()
+    			}}/>
                 <div className="search-books-input-wrapper">
                   {/*
                     NOTES: The search from BooksAPI is limited to a particular set of search terms.
